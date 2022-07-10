@@ -1,5 +1,5 @@
 import random
-from types import NoneType
+import data
 
 def data_cleaner(raw_input:list[str]) -> list[str]:
     osallistujat = []
@@ -34,14 +34,13 @@ def captains(teams_dict:dict):
     for key in keys:
         kapteeni = teams_dict[key][0]
         team_name = "Team " + kapteeni
-        print(team_name)
         another_dict[team_name] = teams_dict[key]
     print(another_dict)        
 
 
 def main():
     #raw_input = input("Anna osallstujat (erota pilkulla): ").split(',')
-    raw_input = ["aksu ", "jussi", "ilta ", "havi", "casti", "hoppe", "Ve ge", "Ryyppö ", " jules"]
+    raw_input = data.raw_input
     cleaned_data = data_cleaner(raw_input)
     teams = team_generator(cleaned_data)
     captains(teams)
