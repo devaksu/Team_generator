@@ -1,18 +1,31 @@
 from classes import Game, Match
 import random
-def check_teams(game:Game):
-    # ? Testing function
+
+def testing_check_teams(game:Game):
+    #? Testing function
     for i in range(4):
         game.teams[i].goal_difference() 
         game.teams[i].display()
 
 
-def game_simulator(matches:list, game:Game):
-    # ? Testing function 
+def testing_game_simulator(matches:list, game:Game):
+    #? Testing function
     for match in matches:
-        print(match)
-        home = match[0]
-        guest = match[1]
+        home_team = match[0][0]
+        guest_team = match[0][1]
         res1 = random.randint(0,2)
         res2 = random.randint(3,4)
-        Match(home=game.teams[home], guest=game.teams[guest],result=[res1,res2]).set_scores()
+        match[1][0] = res1
+        match[1][1] = res2
+        
+        Match(home=game.teams[home_team], guest=game.teams[guest_team],result=[res1,res2]).set_scores()
+
+def testing_one_game(matches:list, game:Game):
+    #? Testing function 
+    home_team = matches[0][0][0]
+    guest_team = matches[0][0][1]
+    res1 = random.randint(0,2)
+    res2 = random.randint(3,4)
+    matches[0][1][0] = res1
+    matches[0][1][1] = res2
+    Match(home=game.teams[home_team], guest=game.teams[guest_team],result=[res1,res2]).set_scores()

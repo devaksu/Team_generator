@@ -2,7 +2,7 @@ import random
 import data
 from classes import Team, Game
 from itertools import combinations
-from testing import check_teams, game_simulator
+from testing import testing_check_teams, testing_game_simulator, testing_one_game
 
 
 def data_cleaner(peeps:list[str]) -> list[str]:
@@ -46,24 +46,33 @@ def create_game(team_names:list[str], teams) -> Game:
     return game
 
 
-def match_table_maker(team_count:int) -> list[tuple[int,int]]:
+def match_table_maker(team_count:int) -> list[tuple[int,int],list[None,None]]:
     """ Create match table """
     team_numbers = [i for i in range(0,team_count)]
     match_list = list(combinations(team_numbers,2))
-    return match_list
+    matches = []
+    for event in match_list:
+        match = [event , [None, None]]
+        matches.append(match)
+
+    return matches
  
 
-def list_games():
-    # TODO: Make a listing of all games and their results if played already
-    pass 
+def list_games(match_list:list[Team, Team], game):
+    """ Function to show all games and results for played games """
+    for count, match in enumerate(match_list, start=1):
+        if match[1][0] is None:
+            print(f'{count}. {game.teams[match[0][0]].name} - {game.teams[match[0][1]].name}')
+        else:
+            print(f'{count}. {game.teams[match[0][0]].name} - {game.teams[match[0][1]].name} {match[1][0]} - {match[1][1]}')
 
-
+    
 def leaderboard():
-    # TODO: Make leaderboard sorting teams based on points and if tied, based on 
+    # TODO: Make leaderboard sorting teams based on points and if tied, based on goal difference
     pass
 
 
-def main(team_count:int):
+def main(team_count:int=4):
     #*raw_input = input("Anna osallistujat (erota pilkulla): ").split(',')
     #*team_count = int(input("Montako joukkuetta arvotaan?: "))
     
@@ -76,13 +85,16 @@ def main(team_count:int):
     
     # Create a match
     match_table = match_table_maker(team_count)
+    testing_game_simulator(match_table, game)
     
-    # ? Testing ------------------------------------------->
-    game_simulator(match_table, game)
-    check_teams(game)
+    #Show match table
+    list_games(match_table,game)
+    
+    #? <------------------------------Testing functions ------------------------------------------->
+    #? testing_one_game(match_table, game)
+    #? testing_check_teams(game)
+    
     
 
 if __name__ == '__main__':
-    #* main()
-    #? Testing main()
-    main(4)
+    main()
