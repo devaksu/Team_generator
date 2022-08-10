@@ -1,6 +1,6 @@
 import random
 import data
-from classes import Team, Game
+from classes import Team, Game, Result
 from itertools import combinations
 from testing import testing_check_teams, testing_game_simulator, testing_one_game
 
@@ -66,13 +66,24 @@ def list_games(match_list:list[Team, Team], game):
         else:
             print(f'{count}. {game.teams[match[0][0]].name} - {game.teams[match[0][1]].name} {match[1][0]} - {match[1][1]}')
 
-    
-def leaderboard():
-    # TODO: Make leaderboard sorting teams based on points and if tied, based on goal difference
-    pass
+
+def update_result(matches:list[Team, Team], game):
+    """ Update result to match list"""
+    list_games(matches,game)
+    game_to_update = int(input("What game you want to update score for?: ")) - 1
+    game_result = input("What was the ending result? (separate by dash - ): ").split('-')
+    home_team = matches[game_to_update][0][0]
+    guest_team = matches[game_to_update][0][1]
+    res_home, res_guest = int(game_result[0]), int(game_result[1])
+    matches[0][1][0] = res_home
+    matches[0][1][1] = res_guest
+    Result(home=game.teams[home_team], guest=game.teams[guest_team],result=[res_home,res_guest]).set_scores()
+    list_games(matches, game)
+
 
 
 def main(team_count:int=4):
+    # Initial setup
     #*raw_input = input("Anna osallistujat (erota pilkulla): ").split(',')
     #*team_count = int(input("Montako joukkuetta arvotaan?: "))
     
@@ -86,9 +97,11 @@ def main(team_count:int=4):
     # Create a match
     match_table = match_table_maker(team_count)
     testing_game_simulator(match_table, game)
-    
+
     #Show match table
     list_games(match_table,game)
+    update_result(match_table,game)
+
     
     #? <------------------------------Testing functions ------------------------------------------->
     #? testing_one_game(match_table, game)

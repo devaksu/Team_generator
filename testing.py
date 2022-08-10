@@ -1,4 +1,4 @@
-from classes import Game, Match
+from classes import Game, Result
 import random
 
 def testing_check_teams(game:Game):
@@ -18,7 +18,7 @@ def testing_game_simulator(matches:list, game:Game):
         match[1][0] = res1
         match[1][1] = res2
         
-        Match(home=game.teams[home_team], guest=game.teams[guest_team],result=[res1,res2]).set_scores()
+        Result(home=game.teams[home_team], guest=game.teams[guest_team],result=[res1,res2]).set_scores()
 
 def testing_one_game(matches:list, game:Game):
     #? Testing function 
@@ -28,4 +28,4 @@ def testing_one_game(matches:list, game:Game):
     res2 = random.randint(3,4)
     matches[0][1][0] = res1
     matches[0][1][1] = res2
-    Match(home=game.teams[home_team], guest=game.teams[guest_team],result=[res1,res2]).set_scores()
+    Result(home=game.teams[home_team], guest=game.teams[guest_team],result=[res1,res2]).set_scores()

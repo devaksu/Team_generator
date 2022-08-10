@@ -36,7 +36,7 @@ class Game():
         self.teams.append(team)
 
 
-class Match(Game):
+class Result(Game):
     """ Class to settle scores from matches and update relevant data for scoreboard"""
     def __init__(self, home:Team, guest:Team, result:list[int,int]):
         super().__init__()
@@ -61,7 +61,11 @@ class Match(Game):
         self.home.goals_scored += self.result[0]
         self.home.goals_against += self.result[1]
         self.home.games_played += 1
+        self.home.difference += self.result[0] - self.result[1]
+
         self.guest.goals_scored += self.result[1]
         self.guest.goals_against += self.result[0]
         self.guest.games_played += 1
+        self.guest.difference += self.result[1] - self.result[0]
+
     
