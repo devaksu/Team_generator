@@ -81,6 +81,29 @@ def update_result(matches:list[Team, Team], game):
     list_games(matches, game)
 
 
+def leaderboard(game, team_count):
+    """ Calculate and show leaderboard """
+    # TODO: Notice goal difference
+    leaderboard = []
+    for i in range(team_count):
+        team = game.teams[i]
+        leaderboard.append(team)
+
+    for j in range(team_count):
+        is_sorted = True
+        
+        for k in range(team_count - j - 1):
+            if leaderboard[k].points < leaderboard[k+1].points:
+                leaderboard[k], leaderboard[k+1] = leaderboard[k+1], leaderboard[k]
+                is_sorted = False
+        
+        if is_sorted:
+            break
+    
+    print(f"Sijoitus \t Joukkue \t Pisteet \t Maaliero")
+    for standing, team in enumerate(leaderboard, start=1):
+        print(f"{standing}. \t\t {team.name} \t {team.points} \t\t {team.difference}")
+
 
 def main(team_count:int=4):
     # Initial setup
@@ -101,6 +124,7 @@ def main(team_count:int=4):
     #Show match table
     list_games(match_table,game)
     update_result(match_table,game)
+    leaderboard(game,team_count)
 
     
     #? <------------------------------Testing functions ------------------------------------------->
