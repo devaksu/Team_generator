@@ -62,9 +62,9 @@ def list_games(match_list:list[Team, Team], game) -> None:
     """ Function to show all games and results for played games """
     for count, match in enumerate(match_list, start=1):
         if match[1][0] is None:
-            print(f'{count}. {game.teams[match[0][0]].name} - {game.teams[match[0][1]].name}')
+            print(f'{count}. {game.teams[match[0][0]].name} \t- {game.teams[match[0][1]].name}')
         else:
-            print(f'{count}. {game.teams[match[0][0]].name} - {game.teams[match[0][1]].name} {match[1][0]} - {match[1][1]}')
+            print(f'{count}. {game.teams[match[0][0]].name} \t- {game.teams[match[0][1]].name} \t{match[1][0]} - {match[1][1]}')
 
 
 def update_result(matches:list[Team, Team], game) -> None:
@@ -75,8 +75,8 @@ def update_result(matches:list[Team, Team], game) -> None:
     home_team = matches[game_to_update][0][0]
     guest_team = matches[game_to_update][0][1]
     res_home, res_guest = int(game_result[0]), int(game_result[1])
-    matches[0][1][0] = res_home
-    matches[0][1][1] = res_guest
+    matches[game_to_update][1][0] = res_home
+    matches[game_to_update][1][1] = res_guest
     Result(home=game.teams[home_team], guest=game.teams[guest_team],result=[res_home,res_guest]).set_scores()
     list_games(matches, game)
 
@@ -93,7 +93,12 @@ def leaderboard(game, team_count:int) -> None:
         is_sorted = True
         
         for k in range(team_count - j - 1):
-            if leaderboard[k].points < leaderboard[k+1].points:
+            if leaderboard[k].points == leaderboard[k+1].points:
+                if leaderboard[k].difference < leaderboard[k+1].difference:
+                    leaderboard[k], leaderboard[k+1] = leaderboard[k+1], leaderboard[k]
+                    is_sorted = False
+
+            elif leaderboard[k].points < leaderboard[k+1].points:
                 leaderboard[k], leaderboard[k+1] = leaderboard[k+1], leaderboard[k]
                 is_sorted = False
         
@@ -112,6 +117,7 @@ def main():
     team_count = 4
     osallistujat = data.raw_input
     max_teams = len(osallistujat) / 2
+    
     if team_count < 2 or team_count > max_teams:
         raise ValueError(f"Give number between 2 and {max_teams}")
     
@@ -127,9 +133,14 @@ def main():
     testing_game_simulator(match_table, game)
 
     #Show match table
-    list_games(match_table,game)
-    update_result(match_table,game)
-    leaderboard(game,team_count)
+    while True:
+        num = int(input("1. list games 2. update result 3. show leaderboard: "))
+        if num == 1:
+            list_games(match_table,game)
+        elif num == 2:
+            update_result(match_table,game)
+        elif num == 3:
+            leaderboard(game,team_count)
 
     
     #? <------------------------------Testing functions ------------------------------------------->
