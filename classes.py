@@ -28,23 +28,24 @@ class Team():
 
 class Game():
     """ Class to start a game and add teams to it """
-    def __init__(self, points_for_win:int=2):
+    def __init__(self):
         self.teams = []
-        self.points_for_win = points_for_win
 
     def add_team(self,team:Team):
         self.teams.append(team)
 
-
-class Result(Game):
+class Result():
     """ Class to settle scores from matches and update relevant data for scoreboard"""
+    
     def __init__(self, home:Team, guest:Team, result:list[int,int]):
         super().__init__()
         self.home = home
         self.guest = guest
         self.result = result
+        self.points_for_win = 2
         self.draw_points = floor(self.points_for_win / 2)
-
+        
+    
     def set_scores(self) -> None:
         """ Function to set scores after match """
         if self.result[0] == self.result[1]:
@@ -71,6 +72,7 @@ class Result(Game):
 
     def remove_scores(self) -> None:
         """ Function to remove scores after change in match result """
+        
         if self.result[0] == self.result[1]:
             self.home.points -= self.draw_points
             self.guest.points -= self.draw_points

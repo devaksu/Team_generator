@@ -18,7 +18,6 @@ def testing_game_simulator(matches:list, game:Game):
         match[1][0] = res1
         match[1][1] = res2
         match[2] = True
-        
         Result(home=game.teams[home_team], guest=game.teams[guest_team],result=[res1,res2]).set_scores()
 
 def testing_one_game(matches:list, game:Game):
