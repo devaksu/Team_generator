@@ -36,9 +36,9 @@ def team_generator(participants:list[str], team_count:int = 2) -> list[list[str]
     return teams, team_names
 
 
-def create_game(team_names:list[str], teams) -> Game:
+def create_game(team_names:list[str], teams:Team, points_for_win:int=2) -> Game:
     """ Create a Game instance """
-    game = Game()
+    game = Game(points_for_win)
     for i in range(len(team_names)):
         t = Team(name=team_names[i], members=teams[i])
         game.add_team(t)
@@ -52,7 +52,7 @@ def match_table_maker(team_count:int) -> list[tuple[int,int],list[None,None]]:
     match_list = list(combinations(team_numbers,2))
     matches = []
     for event in match_list:
-        match = [event , [None, None]]
+        match = [event , [None, None], False]
         matches.append(match)
 
     return matches
@@ -70,20 +70,33 @@ def list_games(match_list:list[Team, Team], game) -> None:
 def update_result(matches:list[Team, Team], game) -> None:
     """ Update result to match list"""
     list_games(matches,game)
-    game_to_update = int(input("What game you want to update score for?: ")) - 1
-    game_result = input("What was the ending result? (separate by dash - ): ").split('-')
+    game_to_update = int(input("Which game you want to update score for?: ")) - 1
+    played = matches[game_to_update][2]
     home_team = matches[game_to_update][0][0]
     guest_team = matches[game_to_update][0][1]
-    res_home, res_guest = int(game_result[0]), int(game_result[1])
-    matches[game_to_update][1][0] = res_home
-    matches[game_to_update][1][1] = res_guest
-    Result(home=game.teams[home_team], guest=game.teams[guest_team],result=[res_home,res_guest]).set_scores()
+    game_result = input("What was the ending result? (separate by dash - ): ").split('-')
+    
+    if played == False:
+        res_home, res_guest = int(game_result[0]), int(game_result[1])
+        matches[game_to_update][1][0] = res_home
+        matches[game_to_update][1][1] = res_guest
+        Result(home=game.teams[home_team], guest=game.teams[guest_team],result=[res_home,res_guest]).set_scores()
+        played = True
+
+    else:
+        old_home_score = matches[game_to_update][1][0]
+        old_guest_score = matches[game_to_update][1][1]
+        Result(home=game.teams[home_team], guest=game.teams[guest_team],result=[old_home_score, old_guest_score]).remove_scores()
+        res_home, res_guest = int(game_result[0]), int(game_result[1])
+        matches[game_to_update][1][0] = res_home
+        matches[game_to_update][1][1] = res_guest
+        Result(home=game.teams[home_team], guest=game.teams[guest_team],result=[res_home,res_guest]).set_scores()
+
     list_games(matches, game)
 
 
 def leaderboard(game, team_count:int) -> None:
     """ Calculate and show leaderboard """
-    # TODO: Notice goal difference
     leaderboard = []
     for i in range(team_count):
         team = game.teams[i]
@@ -105,28 +118,33 @@ def leaderboard(game, team_count:int) -> None:
         if is_sorted:
             break
     
-    print(f"Sijoitus \t Joukkue \t Pisteet \t Maaliero")
+    print(f"Standing \t Team \t\t Games\t Points \t Difference")
     for standing, team in enumerate(leaderboard, start=1):
-        print(f"{standing}. \t\t {team.name} \t {team.points} \t\t {team.difference}")
+        if team.difference > 0:
+            print(f"{standing}. \t\t {team.name} \t {team.games_played}\t {team.points} \t\t +{team.difference}")
+        else:
+            print(f"{standing}. \t\t {team.name} \t {team.games_played}\t {team.points} \t\t {team.difference}")
 
 
 def main():
     # Initial setup
-    #*osallistujat = input("Anna osallistujat (erota pilkulla): ").split(',')
-    #*team_count = int(input("Montako joukkuetta arvotaan?: "))
+    #*players = input("Players (separated by comma): ").split(',')
+    #*team_count = int(input("How many teams will be generated? : "))
+    #*points = int(input("How many points for win? (Default 2): "))
     team_count = 4
-    osallistujat = data.raw_input
-    max_teams = len(osallistujat) / 2
+    players = data.raw_input
+    points = 2
+    max_teams = len(players) / 2
     
     if team_count < 2 or team_count > max_teams:
         raise ValueError(f"Give number between 2 and {max_teams}")
     
     # Create teams and team names
-    cleaned_data = data_cleaner(osallistujat)
+    cleaned_data = data_cleaner(players)
     teams, team_names = team_generator(cleaned_data, team_count)
 
     # Start a Game
-    game = create_game(team_names,teams)
+    game = create_game(team_names,teams, points_for_win=points)
     
     # Create a match
     match_table = match_table_maker(team_count)
