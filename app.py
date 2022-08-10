@@ -15,7 +15,7 @@ def data_cleaner(peeps:list[str]) -> list[str]:
     return participants
 
 
-def team_generator(participants:list[str], team_count:int = 2) -> list[list[str]]:
+def team_generator(participants:list[str], team_count:int=2) -> list[list[str]]:
     """ Get number of teams and divide players randomly to those teams """
     teams = []
     for i in range(team_count):
@@ -36,9 +36,9 @@ def team_generator(participants:list[str], team_count:int = 2) -> list[list[str]
     return teams, team_names
 
 
-def create_game(team_names:list[str], teams:Team, points_for_win:int=2) -> Game:
+def create_game(team_names:list[str], teams:Team) -> Game:
     """ Create a Game instance """
-    game = Game(points_for_win)
+    game = Game()
     for i in range(len(team_names)):
         t = Team(name=team_names[i], members=teams[i])
         game.add_team(t)
@@ -130,10 +130,8 @@ def main():
     # Initial setup
     #*players = input("Players (separated by comma): ").split(',')
     #*team_count = int(input("How many teams will be generated? : "))
-    #*points = int(input("How many points for win? (Default 2): "))
-    team_count = 4
+    team_count = 5
     players = data.raw_input
-    points = 2
     max_teams = len(players) / 2
     
     if team_count < 2 or team_count > max_teams:
@@ -144,7 +142,7 @@ def main():
     teams, team_names = team_generator(cleaned_data, team_count)
 
     # Start a Game
-    game = create_game(team_names,teams, points_for_win=points)
+    game = create_game(team_names, teams)
     
     # Create a match
     match_table = match_table_maker(team_count)
