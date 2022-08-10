@@ -43,12 +43,13 @@ class Result(Game):
         self.home = home
         self.guest = guest
         self.result = result
+        self.draw_points = floor(self.points_for_win / 2)
 
     def set_scores(self) -> None:
+        """ Function to set scores after match """
         if self.result[0] == self.result[1]:
-            draw_points = floor(self.points_for_win / 2)
-            self.home.points += draw_points
-            self.guest.points += draw_points
+            self.home.points += self.draw_points
+            self.guest.points += self.draw_points
 
         elif self.result[0] > self.result[1]:
             self.home.wins += 1
@@ -67,5 +68,31 @@ class Result(Game):
         self.guest.goals_against += self.result[0]
         self.guest.games_played += 1
         self.guest.difference += self.result[1] - self.result[0]
+
+    def remove_scores(self) -> None:
+        """ Function to remove scores after change in match result """
+        if self.result[0] == self.result[1]:
+            self.home.points -= self.draw_points
+            self.guest.points -= self.draw_points
+
+        elif self.result[0] > self.result[1]:
+            self.home.wins -= 1
+            self.home.points -= self.points_for_win
+       
+        else:
+            self.guest.wins -= 1
+            self.guest.points -= self.points_for_win
+        
+        self.home.goals_scored -= self.result[0]
+        self.home.goals_against -= self.result[1]
+        self.home.games_played -= 1
+        self.home.difference -= self.result[0] + self.result[1]
+
+        self.guest.goals_scored -= self.result[1]
+        self.guest.goals_against -= self.result[0]
+        self.guest.games_played -= 1
+        self.guest.difference -= self.result[1] + self.result[0]
+
+
 
     
