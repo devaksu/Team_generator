@@ -58,7 +58,7 @@ def match_table_maker(team_count:int) -> list[tuple[int,int],list[None,None]]:
     return matches
  
 
-def list_games(match_list:list[Team, Team], game):
+def list_games(match_list:list[Team, Team], game) -> None:
     """ Function to show all games and results for played games """
     for count, match in enumerate(match_list, start=1):
         if match[1][0] is None:
@@ -67,7 +67,7 @@ def list_games(match_list:list[Team, Team], game):
             print(f'{count}. {game.teams[match[0][0]].name} - {game.teams[match[0][1]].name} {match[1][0]} - {match[1][1]}')
 
 
-def update_result(matches:list[Team, Team], game):
+def update_result(matches:list[Team, Team], game) -> None:
     """ Update result to match list"""
     list_games(matches,game)
     game_to_update = int(input("What game you want to update score for?: ")) - 1
@@ -81,7 +81,7 @@ def update_result(matches:list[Team, Team], game):
     list_games(matches, game)
 
 
-def leaderboard(game, team_count):
+def leaderboard(game, team_count:int) -> None:
     """ Calculate and show leaderboard """
     # TODO: Notice goal difference
     leaderboard = []
@@ -105,13 +105,18 @@ def leaderboard(game, team_count):
         print(f"{standing}. \t\t {team.name} \t {team.points} \t\t {team.difference}")
 
 
-def main(team_count:int=4):
+def main():
     # Initial setup
-    #*raw_input = input("Anna osallistujat (erota pilkulla): ").split(',')
+    #*osallistujat = input("Anna osallistujat (erota pilkulla): ").split(',')
     #*team_count = int(input("Montako joukkuetta arvotaan?: "))
+    team_count = 4
+    osallistujat = data.raw_input
+    max_teams = len(osallistujat) / 2
+    if team_count < 2 or team_count > max_teams:
+        raise ValueError(f"Give number between 2 and {max_teams}")
     
     # Create teams and team names
-    cleaned_data = data_cleaner(data.raw_input)
+    cleaned_data = data_cleaner(osallistujat)
     teams, team_names = team_generator(cleaned_data, team_count)
 
     # Start a Game
